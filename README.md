@@ -8,4 +8,5 @@ The motion profile is defined for columns 1-3 are being xyz position and columns
 The environment G-level can also be defined here.
 
 The final output of the file is the following:
-![alt text](https://github.com/aaronallred/Motion-Sickness-Dynamics/ExampleOutput.png?raw=true)
+![alt text](https://github.com/aaronallred/Motion-Sickness-Dynamics/blob/ExampleOutput.png?raw=true)
+
