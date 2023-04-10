@@ -25,7 +25,7 @@ switch motiontype
         % columns 1-3 are xyz position
         % columns 4-6 are xyz rotations
         freq = 0.3;
-        amp = 3.6 /((2*pi*freq)^2); % zposition amplitude
+        amp = 3.6 /((2*pi*freq)^2); % yposition amplitude
         model_motion(:,2) = amp*sin(freq*2*pi*(model_time));
         
         % Glevel is the Gravity Environment
@@ -44,6 +44,7 @@ switch motiontype
         
     case 'Cian'
         % Cian Simulation
+        Glevel = 1.00;
         T = 60*20+102; %seconds
         dt = 0.1;
         model_time = (0:dt:T)';
@@ -51,7 +52,7 @@ switch motiontype
         
         starttime = 102;
         endtime = 122;
-        ang = 12; %degrees
+        ang = 18; %degrees
         
         RotSpeed = ang/(endtime-starttime);
         % Human Reference Frame motions
@@ -96,9 +97,9 @@ R = cont2MISC(R);
 FS = 20; % FontSize
 cd = colormap('hsv');
 
-legMotion = {'X-axis Position (m/s^2)',...
-             'Y-axis Position (m/s^2)',...
-             'Z-axis Position (m/s^2)',...
+legMotion = {'X-axis Position (m)',...
+             'Y-axis Position (m)',...
+             'Z-axis Position (m)',...
              'X-axis Rotation (deg/s)',...
              'Y-axis Rotation (deg/s)',...
              'Z-axis Rotation (deg/s)'};
