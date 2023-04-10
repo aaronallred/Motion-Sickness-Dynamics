@@ -45,15 +45,15 @@ switch motiontype
     case 'Cian'
         % Cian Simulation
         Glevel = 1.00;
-        T = 60*20+102; %seconds
+        T = 60*20+132; %seconds
         dt = 0.1;
         model_time = (0:dt:T)';
         model_motion = [0 0 0 0 0 0].*zeros(length(model_time),1);
         
-        starttime = 102;
-        endtime = 122;
+        starttime = 132;
+        endtime = 150;
         ang = 18; %degrees
-        
+
         RotSpeed = ang/(endtime-starttime);
         % Human Reference Frame motions
         YawSpeed = model_time*(1); YawSpeed(YawSpeed >72) = 72;
@@ -65,7 +65,7 @@ switch motiontype
         
         for i = 1:length(model_time)
             
-            if model_time(i) > starttime && model_time(i) < endtime
+            if model_time(i) >= starttime && model_time(i) < endtime
                 Rx = [1 0 0;0 cosd(ang) -sind(ang);0 sind(ang) cosd(ang)];
                 Rz = [cosd(YawAngle(i)) -sind(YawAngle(i)) 0;sind(YawAngle(i)) cosd(YawAngle(i)) 0; 0 0 1];
                 RvH = (Rz\(Rx\RvE))';
