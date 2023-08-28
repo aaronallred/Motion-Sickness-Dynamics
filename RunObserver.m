@@ -128,7 +128,7 @@ kfg = 4*[1 1 1]';
 % Initialize Kfw feedback gain
 kfw = 8*[1 1 1]';
 % Initialize Kaa feedback gain
-kaa = -4*[1 1 1]';
+kaa = -0.5*[1 1 1]';
 % Initialize Kwg feedback gain
 kwg = 1*[1 1 1]';
 % Initialize Kvg feedback gain
