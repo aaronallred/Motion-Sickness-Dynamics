@@ -1,12 +1,21 @@
-% Example Simulator
+% Example Simulator for code in Allred et al. 2023
+% https://doi.org/10.1007/s00221-023-06684-9
 % Created by: Aaron Allred
-% Date: 3/3/2023
 clc;clear;
+addpath("./observer/")
+addpath("./tools/")
 
 % Set to 'Custom' for a custom profile
 % Set to 'Cian' for Cian et al. (2011) OVAR motion
 % Set to 'Gravity Transition' for a 1g to 0g trans. w/o adaptation
-motiontype = 'Cian';
+motiontype = 'Custom';
+
+% Filtered or Unfiltered MS Dynamics
+Filter = 0; % 0: Unfiltered | 1: Bandpass Filter tuned in Allred et al. 23
+
+%% Motion Sickness Model Parameters
+s  = [632    11.7   624 ...             % Weighting Terms
+      472    1e-5   0.233  508   80];   % Symptom Dynamics Terms
 
 %% Define Motion Profile
 
@@ -29,64 +38,35 @@ switch motiontype
         model_motion(:,2) = amp*sin(freq*2*pi*(model_time));
         
         % Glevel is the Gravity Environment
-        Glevel = 1;
+        Glevel = [0 0 -1].*ones(length(model_time),1);
 
         tidx = 1:round(1/freq/dt*3); % time indeces to plot
 
     case 'Gravity Transition'
+        % Define motion profile length
+        TotalTime = 60*60; % seconds
+        t0 = 0.1; % model sim sec
+
+        %initialization
+        dt = t0; %sec
+        model_time = (t0:dt:TotalTime)';
+
+        % Roll Tilt in 0g
         freq = 0.3;
         amp = 0*200 /((2*pi*freq)); % wx amplitude
         model_motion = [0 0 0 0 0 0].*model_time; %initialize 
         model_motion(:,4) = amp*cos(freq*2*pi*(model_time));
-        Glevel = 0.00;
+        Glevel = [0 0 -0].*ones(length(model_time),1);
 
         tidx = 1:round(1/freq/dt*3); % time indeces to plot
         
     case 'Cian'
-        % Cian Simulation
-        Glevel = 1.00;
-        T = 60*20+132; %seconds
-        dt = 0.1;
-        model_time = (0:dt:T)';
-        model_motion = [0 0 0 0 0 0].*zeros(length(model_time),1);
-        
-        starttime = 132;
-        endtime = 150;
-        ang = 18; %degrees
-
-        RotSpeed = ang/(endtime-starttime);
-        % Human Reference Frame motions
-        YawSpeed = model_time*(1); YawSpeed(YawSpeed >72) = 72;
-        YawAngle = cumtrapz(model_time,YawSpeed);
-        RollSpeed = model_time*0;
-        PitchSpeed = model_time*0;
-        
-        RvE = [1;0;0]; % tilt vector in Earth system
-        
-        for i = 1:length(model_time)
-            
-            if model_time(i) >= starttime && model_time(i) < endtime
-                Rx = [1 0 0;0 cosd(ang) -sind(ang);0 sind(ang) cosd(ang)];
-                Rz = [cosd(YawAngle(i)) -sind(YawAngle(i)) 0;sind(YawAngle(i)) cosd(YawAngle(i)) 0; 0 0 1];
-                RvH = (Rz\(Rx\RvE))';
-                model_motion(i,4:6) = [RollSpeed(i) PitchSpeed(i) YawSpeed(i)]+...
-                                      RvH*RotSpeed;
-            else
-                model_motion(i,4:6) = [RollSpeed(i) PitchSpeed(i) YawSpeed(i)];
-            end
-        end
-        
-        spindowntime = 10;%sec
-        recovery = (model_time(end)+dt:dt:model_time(end)+20*60)';
-        recovery_motion = linspace(model_motion(end,6),0,spindowntime/dt)';
-        model_time = [model_time;recovery];
-        model_motion = [model_motion;zeros(length(recovery_motion),5) recovery_motion;zeros(length(recovery)-length(recovery_motion),6)];
-
-        tidx = 1:length(model_time);
+       [model_time, model_motion, Glevel] = CianParadigm();
+       tidx = 1:length(model_time);
 end
 
 %% Observer + Oman Motion Sickness Dynamics    
-[ts, Ru,h,hcomp] = RunObserver(model_time,model_motion,Glevel);
+[ts, Ru,h,hcomp] = Observer_Optimize(model_time,model_motion,s,Glevel,0,Filter);
     
 % MISC Output Mapping
 time = model_time(1):30:model_time(end);
@@ -94,8 +74,10 @@ R = interp1(ts,Ru,time); % Interpolate onto a reduced grid for mapping
 R = cont2MISC(R); 
 
 %% Plot
+colors;
+
 FS = 20; % FontSize
-cd = colormap('hsv');
+cd = colormap(diverg1);
 
 legMotion = {'X-axis Position (m)',...
              'Y-axis Position (m)',...
