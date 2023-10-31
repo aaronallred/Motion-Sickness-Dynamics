@@ -1,6 +1,6 @@
 % Example Simulator for code in Allred et al. 2023
 % https://doi.org/10.1007/s00221-023-06684-9
-% Created by: Aaron Allred
+
 clc;clear;
 addpath("./observer/")
 addpath("./tools/")
