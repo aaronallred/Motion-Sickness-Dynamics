@@ -19,9 +19,7 @@ Additionally, you can use the unfiltered or bandpass filtered dynamics, explored
 The motion profile is defined for columns 1-3 are being xyz position and columns 4-6 are xyz rotations.
 
 The following pre-defined example simulations are provided:
-
 'Cian' (Cian et al. 2011). An OVAR motion profile explored as our validation motion paradigm
-
 'Gravity Transition'a 1g-0g gravity transition without adaptation over time during roll motion
 
 The final output of the file is the following:
