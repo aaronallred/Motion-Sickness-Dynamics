@@ -11,7 +11,7 @@ The most recent motion sickness model has updated parameters for the sensory wei
 
 Alternative sets of perceptual parameters were explored in Irmak et al. 2023, and we have not yet examined the performance with such alternative sets.
 
-# Run Simulations
+# Running Simulations
 Within the 'Main.m' file, you can define a 'Custom' motion profile, picking 6DOF motion and the environment G-level over time.
 
 Additionally, you can use the unfiltered or bandpass filtered dynamics, explored in Allred et al. 2023.
