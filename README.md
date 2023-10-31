@@ -1,6 +1,9 @@
 # Motion-Sickness-Dynamics
 
 This code is intended to serve as an implementation to the motion sickness dynamics model presented in Experimental Brain Research.\
+
+See: https://doi.org/10.1007/s00221-023-06684-9 \\
+
 Simulink v. 2023b is required to run the observer model with motion sickness symptom dynamces. 
 
 # Update Oct 2023
@@ -9,7 +12,8 @@ The most recent motion sickness model has updated parameters for the sensory wei
 Alternative sets of perceptual parameters were explored in Irmak et al. 2023, and we have not yet examined the performance with such alternative sets.
 
 # Run Simulations
-Within the 'Main.m' file, you can define a 'Custom' motion profile, and the environment G-level can also be defined here.\
+Within the 'Main.m' file, you can define a 'Custom' motion profile, picking 6DOF motion and the environment G-level over time.\\
+Additionally, you can use the unfiltered or bandpass filtered dynamics, explored in Allred et al. 2023.\\
 The motion profile is defined for columns 1-3 are being xyz position and columns 4-6 are xyz rotations.
 
 You can also run some pre-definied examples such as:\
